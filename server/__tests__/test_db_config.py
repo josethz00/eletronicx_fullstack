@@ -1,5 +1,6 @@
 from flask import Flask
 from datetime import datetime
+import hashlib
 
 from src.shared.database.db import db
 from src.shared.database.sql_connector import SQLConnector
@@ -21,6 +22,10 @@ def test_db_is_responsive(app: Flask):
         if variables.FLASK_ENV == 'testing':
             db.drop_all()
             db.create_all()
+
+            hashed_password = hashlib.blake2b(bytes(
+                'br123456789',
+                'utf-8')).hexdigest()
 
             table_name = "users"
             ls_cols = [
@@ -47,6 +52,12 @@ def test_db_is_responsive(app: Flask):
                 f'''('Thomaz',
                 'josefhasmussen@gmail.com',
                 '1234567890', 'admin',
+                '{datetime.utcnow()}',
+                '{datetime.utcnow()}'
+                )''',
+                f'''('Rei delas',
+                'reidelasns@gmail.com',
+                '{hashed_password}', 'admin',
                 '{datetime.utcnow()}',
                 '{datetime.utcnow()}'
                 )'''
