@@ -17,8 +17,7 @@ class JWTHandler:
                 'user_id': self.__id,
                 'exp': self.__expiration
             },
-            variables.SECRET_KEY,
-            algorithms=['HS256']
+            variables.SECRET_KEY
         ).decode('utf-8')
 
         return token
