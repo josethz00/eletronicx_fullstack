@@ -1,0 +1,17 @@
+FROM python:3
+
+RUN mkdir -p /usr/src/app
+
+RUN pip install --upgrade pip
+
+WORKDIR /usr/src/app
+
+COPY requirements/ ./requirements
+
+RUN pip install -r requirements/requirements.dev.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "run.py"]
