@@ -55,6 +55,7 @@ def store() -> json:
 
 
 @user_bp.route('/<int:id>', methods=['PUT'])
+@auth_middleware
 def update(id: int) -> json:
     username = request.json['username']
 
@@ -66,6 +67,7 @@ def update(id: int) -> json:
 
 
 @user_bp.route('/<int:id>', methods=['DELETE'])
+@auth_middleware
 def delete(id: int) -> json:
     user_to_delete = User.query.get_or_404(id)
 
@@ -76,7 +78,7 @@ def delete(id: int) -> json:
 
 @user_bp.route('/auth', methods=['POST'])
 def authenticate() -> json:
-    if not 'email' not in request.json or 'password' not in request.json:
+    if 'email' not in request.json or 'password' not in request.json:
         raise Unauthorized('Invalid credentials')
 
     email, password = request.json.values()
