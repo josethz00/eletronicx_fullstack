@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+    flask_app:
+        container_name: flask_app_container
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        depends_on:
+            - postgres_app
+        ports:
+            - '5000:5000'
+        volumes:
+            - ./:/usr/src/app
+        environment:
+            - FLASK_TEST
+    postgres_app:
+        container_name: postgres_flask_container
+        image: postgres
+        networks:
+            - default
+        environment:
+            POSTGRES_HOST: '192.168.15.6'
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: docker
+            POSTGRES_DB: flask_luby_test
+        ports:
+            - "5434:5432"
+        restart: unless-stopped
