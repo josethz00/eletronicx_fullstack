@@ -5,3 +5,4 @@ dump.rdb
 .vscode
 .pytest_cache
 test.db
+variables.py
