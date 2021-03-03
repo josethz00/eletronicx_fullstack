@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify
 import json
 import hashlib
 from werkzeug.exceptions import Unauthorized
-from threading import Thread
 
 from .user import User
 from src.shared.database.db import db
@@ -18,7 +17,8 @@ user_bp = Blueprint('users', __name__, url_prefix='/users')
 @auth_middleware
 @role_middleware
 def index() -> json:
-    users = User.query.all()
+    page, per_page = request.args.get('page'), 10
+    users = User.query.paginate(page, per_page, error_out=False)
     return jsonify(users), 200
 
 
@@ -97,6 +97,8 @@ def authenticate() -> json:
         {
             'id': user.id,
             'username': user.username,
+            'email': user.email,
+            'role': user.role,
             'token': jwt_handler.sign()
         }
     ), 201

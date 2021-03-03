@@ -12,7 +12,8 @@ category_bp = Blueprint('category', __name__, url_prefix='/categories')
 @category_bp.route('', methods=['GET'])
 @auth_middleware
 def index() -> json:
-    categories = Category.query.all()
+    page, per_page = request.args.get('page'), 10
+    categories = Category.query.paginate(page, per_page, error_out=False)
     return jsonify(categories), 200
 
 

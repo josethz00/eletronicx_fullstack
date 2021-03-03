@@ -13,8 +13,9 @@ item_bp = Blueprint('items', __name__, url_prefix='/items')
 @item_bp.route('', methods=['GET'])
 @auth_middleware
 def index() -> json:
-    items = Item.query.all()
-    return jsonify(items), 200
+    page, per_page = int(request.args.get('page')), 10
+    items = Item.query.paginate(page, per_page, error_out=False)
+    return jsonify(items.items), 200
 
 
 @item_bp.route('', methods=['POST'])
